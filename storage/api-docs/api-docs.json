@@ -1,0 +1,205 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Monitoring Listrik API",
+        "description": "Dokumentasi API Monitoring Listrik",
+        "version": "1.0.0"
+    },
+    "paths": {
+        "/api/test": {
+            "get": {
+                "tags": [
+                    "Test"
+                ],
+                "summary": "Test API",
+                "operationId": "af4eef7c415174b57a22c482494a6a28",
+                "responses": {
+                    "200": {
+                        "description": "Berhasil"
+                    }
+                }
+            }
+        },
+        "/api/meter-listrik": {
+            "get": {
+                "tags": [
+                    "Meter Listrik"
+                ],
+                "summary": "Ambil data meter listrik",
+                "operationId": "a39ffebd35dca2df2f7702e1220621c5",
+                "responses": {
+                    "200": {
+                        "description": "Berhasil"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Meter Listrik"
+                ],
+                "summary": "Tambah meter listrik",
+                "operationId": "4e4124a485a0cc9279fbb2642b02d330",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "pelanggan_id",
+                                    "nomor_meter",
+                                    "daya"
+                                ],
+                                "properties": {
+                                    "pelanggan_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "nomor_meter": {
+                                        "type": "string",
+                                        "example": "MTR001"
+                                    },
+                                    "daya": {
+                                        "type": "string",
+                                        "example": "1300 VA"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Berhasil ditambahkan"
+                    }
+                }
+            }
+        },
+        "/api/meter-listrik/{id}": {
+            "put": {
+                "tags": [
+                    "Meter Listrik"
+                ],
+                "summary": "Update meter listrik",
+                "operationId": "17f75c07f71cf0e937157c52b06cf2d6",
+                "responses": {
+                    "200": {
+                        "description": "Berhasil update"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Meter Listrik"
+                ],
+                "summary": "Hapus meter listrik",
+                "operationId": "4bb740212d72f8f7b23552e361a592c3",
+                "responses": {
+                    "200": {
+                        "description": "Berhasil hapus"
+                    }
+                }
+            }
+        },
+        "/api/pelanggan": {
+            "get": {
+                "tags": [
+                    "Pelanggan"
+                ],
+                "summary": "Ambil semua data pelanggan",
+                "operationId": "1ea91665c78e75fd827e1803664a3ff8",
+                "responses": {
+                    "200": {
+                        "description": "Berhasil"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Pelanggan"
+                ],
+                "summary": "Tambah pelanggan",
+                "operationId": "675065c4ccaba8cf2f076cefb0d71d09",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "nama",
+                                    "alamat",
+                                    "no_meter",
+                                    "no_hp"
+                                ],
+                                "properties": {
+                                    "nama": {
+                                        "type": "string",
+                                        "example": "Raihan"
+                                    },
+                                    "alamat": {
+                                        "type": "string",
+                                        "example": "Pekanbaru"
+                                    },
+                                    "no_meter": {
+                                        "type": "string",
+                                        "example": "123456789"
+                                    },
+                                    "no_hp": {
+                                        "type": "string",
+                                        "example": "08123456789"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Berhasil ditambahkan"
+                    }
+                }
+            }
+        },
+        "/api/pelanggan/{id}": {
+            "put": {
+                "tags": [
+                    "Pelanggan"
+                ],
+                "summary": "Update pelanggan",
+                "operationId": "b7546af7fada316d294624c44479129d",
+                "responses": {
+                    "200": {
+                        "description": "Berhasil diupdate"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Pelanggan"
+                ],
+                "summary": "Hapus pelanggan",
+                "operationId": "8af04b4026b1194e71db59a7610d5e8a",
+                "responses": {
+                    "200": {
+                        "description": "Berhasil dihapus"
+                    }
+                }
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Test",
+            "description": "Test"
+        },
+        {
+            "name": "Meter Listrik",
+            "description": "Meter Listrik"
+        },
+        {
+            "name": "Pelanggan",
+            "description": "Pelanggan"
+        }
+    ]
+}
