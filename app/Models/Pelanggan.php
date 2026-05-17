@@ -17,6 +17,7 @@ class Pelanggan extends Model
     {
         return $this->hasOne(MeterListrik::class);
     }
+
     public function pemakaian()
     {
         return $this->hasMany(Pemakaian::class);

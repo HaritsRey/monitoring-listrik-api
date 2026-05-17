@@ -46,11 +46,31 @@ class PelangganController extends Controller
  * )
  */
 public function store(Request $request)
-    {
-        $pelanggan = Pelanggan::create($request->all());
+{
+    try {
 
-        return response()->json($pelanggan, 201);
+        $pelanggan = new Pelanggan();
+
+        $pelanggan->nama = $request->nama;
+        $pelanggan->alamat = $request->alamat;
+        $pelanggan->no_meter = $request->no_meter;
+        $pelanggan->no_hp = $request->no_hp;
+
+        $pelanggan->save();
+
+        return response()->json([
+            'message' => 'Data berhasil ditambahkan',
+            'data' => $pelanggan
+        ], 201);
+
+    } catch (\Exception $e) {
+
+        return response()->json([
+            'error' => $e->getMessage()
+        ], 500);
+
     }
+}
 
     /**
      * @OA\Put(
@@ -63,6 +83,12 @@ public function store(Request $request)
      *     )
      * )
      */
+public function show($id)
+    {
+         $pelanggan = Pelanggan::findOrFail($id);
+
+        return response()->json($pelanggan);
+    }
     public function update(Request $request, $id)
     {
         $pelanggan = Pelanggan::findOrFail($id);

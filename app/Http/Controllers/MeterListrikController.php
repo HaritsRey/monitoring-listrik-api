@@ -48,11 +48,17 @@ class MeterListrikController extends Controller
      */
     public function store(Request $request)
     {
-        return response()->json(
-            MeterListrik::create($request->all()),
-            201
-        );
-    }
+    $meter = MeterListrik::create([
+        'pelanggan_id' => $request->pelanggan_id,
+        'nomor_meter' => $request->nomor_meter,
+        'daya' => $request->daya,
+    ]);
+
+    return response()->json([
+        'message' => 'Meter listrik berhasil ditambahkan',
+        'data' => $meter
+    ], 201);
+}
 
     /**
      * @OA\Put(
