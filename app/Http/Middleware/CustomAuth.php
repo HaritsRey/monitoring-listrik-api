@@ -31,6 +31,11 @@ class CustomAuth
             ], 401);
         }
 
+        // HUBUNGKAN USER KE REQUEST
+        $request->setUserResolver(function () use ($accessToken) {
+            return $accessToken->tokenable;
+        });
+
         return $next($request);
     }
 }

@@ -120,25 +120,98 @@ class PelangganController extends Controller
      * )
      */
     public function show($id)
-    {
-        $pelanggan = Pelanggan::find($id);
+{
+    $pelanggan = Pelanggan::with([
 
-        if (!$pelanggan) {
+        'meterListrik' => function ($query) {
+            $query->select(
+                'pelanggan_id',
+                'nomor_meter',
+                'daya'
+            );
+        },
 
-            return response()->json([
-                'success' => false,
-                'message' => 'Data pelanggan tidak ditemukan'
-            ], 404);
+        'pemakaian' => function ($query) {
+            $query->select(
+                'id',
+                'pelanggan_id',
+                'bulan',
+                'tahun',
+                'meter_awal',
+                'meter_akhir',
+                'total_kwh'
+            );
+        },
 
+        'pemakaian.tagihan' => function ($query) {
+            $query->select(
+                'id',
+                'pemakaian_id',
+                'jumlah_tagihan',
+                'status'
+            );
+        },
+
+        'pemakaian.tagihan.pembayaran' => function ($query) {
+            $query->select(
+                'tagihan_id',
+                'tanggal_bayar',
+                'total_bayar'
+            );
         }
 
+    ])->find($id);
+
+    if (!$pelanggan) {
         return response()->json([
-            'success' => true,
-            'message' => 'Detail pelanggan berhasil diambil',
-            'data' => $pelanggan
-        ], 200);
+            'success' => false,
+            'message' => 'Pelanggan tidak ditemukan'
+        ], 404);
     }
 
+    // Custom response manual
+    $response = [
+        'nama' => $pelanggan->nama,
+        'alamat' => $pelanggan->alamat,
+        'no_meter' => $pelanggan->no_meter,
+        'no_hp' => $pelanggan->no_hp,
+
+        'meter_listrik' => [
+            'nomor_meter' => $pelanggan->meterListrik->nomor_meter ?? null,
+            'daya' => $pelanggan->meterListrik->daya ?? null,
+        ],
+
+        'pemakaian' => $pelanggan->pemakaian->map(function ($pemakaian) {
+
+            return [
+                'bulan' => $pemakaian->bulan,
+                'tahun' => $pemakaian->tahun,
+                'meter_awal' => $pemakaian->meter_awal,
+                'meter_akhir' => $pemakaian->meter_akhir,
+                'total_kwh' => $pemakaian->total_kwh,
+
+                'tagihan' => $pemakaian->tagihan ? [
+
+                    'jumlah_tagihan' => $pemakaian->tagihan->jumlah_tagihan,
+                    'status' => $pemakaian->tagihan->status,
+
+                    'pembayaran' => $pemakaian->tagihan->pembayaran ? [
+
+                        'tanggal_bayar' => $pemakaian->tagihan->pembayaran->tanggal_bayar,
+                        'total_bayar' => $pemakaian->tagihan->pembayaran->total_bayar
+
+                    ] : null
+
+                ] : null
+            ];
+        })
+    ];
+
+    return response()->json([
+        'success' => true,
+        'data' => $response
+    ]);
+}
     /**
      * @OA\Put(
      *     path="/api/pelanggan/{id}",

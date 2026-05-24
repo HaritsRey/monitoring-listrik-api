@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
 
             $table->foreignId('pelanggan_id')
-                ->constrained('pelanggans')
+                ->constrained('pelanggan')
                 ->onDelete('cascade');
 
             $table->string('nomor_meter');

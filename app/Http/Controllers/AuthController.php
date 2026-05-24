@@ -15,7 +15,7 @@ class AuthController extends BaseController
         $request->validate([
             'name' => 'required',
             'email' => 'required|email|unique:users',
-            'password' => 'required|min:4'
+            'password' => 'required|min:8'
         ]);
 
         $user = User::create([
@@ -25,10 +25,15 @@ class AuthController extends BaseController
         ]);
 
         return response()->json([
+            'success' => true,
             'message' => 'Register berhasil',
-            'data' => $user
+            'data' => [
+                'name' => $user->name,
+                'email' => $user->email
+            ]
         ], 201);
-    }
+
+    } // <- ini yang tadi kurang
 
     // LOGIN
     public function login(Request $request)
@@ -42,11 +47,10 @@ class AuthController extends BaseController
 
         if (!$user || !Hash::check($request->password, $user->password)) {
 
-        return $this->sendError(
-        'Email atau password salah',
-        401
-        );
-
+            return $this->sendError(
+                'Email atau password salah',
+                401
+            );
         }
 
         // hapus token lama
@@ -60,21 +64,40 @@ class AuthController extends BaseController
         )->plainTextToken;
 
         return $this->sendResponse(
-        'Login berhasil',
-        [
-        'token' => $token,
-        'expired_in' => '2 jam'
-        ]
-    );
+            'Login berhasil',
+            [
+                'token' => $token,
+                'expired_in' => '2 jam'
+            ]
+        );
     }
 
     // LOGOUT
-    public function logout(Request $request)
-    {
-        $request->user()->currentAccessToken()->delete();
+public function logout(Request $request)
+{
+    $token = $request->bearerToken();
 
+    if (!$token) {
         return response()->json([
-            'message' => 'Logout berhasil'
-        ]);
+            'success' => false,
+            'message' => 'Token tidak ditemukan'
+        ], 401);
     }
+
+    $accessToken = \Laravel\Sanctum\PersonalAccessToken::findToken($token);
+
+    if (!$accessToken) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Token tidak valid'
+        ], 401);
+    }
+
+    $accessToken->delete();
+
+    return response()->json([
+        'success' => true,
+        'message' => 'Logout berhasil'
+    ], 200);
+}
 }

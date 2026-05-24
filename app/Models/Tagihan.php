@@ -18,8 +18,9 @@ class Tagihan extends Model
     {
         return $this->belongsTo(Pemakaian::class);
     }
+
     public function pembayaran()
     {
-         return $this->hasOne(Pembayaran::class);
+        return $this->hasOne(Pembayaran::class);
     }
 }

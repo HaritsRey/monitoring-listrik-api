@@ -17,9 +17,10 @@ class Pemakaian extends Model
         'total_kwh'
     ];
 
+
     public function pelanggan()
     {
-        return $this->belongsTo(Pelanggan::class);
+    return $this->belongsTo(Pelanggan::class);
     }
     public function tagihan()
     {
