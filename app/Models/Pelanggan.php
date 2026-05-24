@@ -12,7 +12,12 @@ class Pelanggan extends Model
         'no_meter',
         'no_hp'
     ];
-
+    
+    protected $hidden = [
+    'created_at',
+    'updated_at'
+    ];
+    
     public function meterListrik()
     {
         return $this->hasOne(MeterListrik::class);

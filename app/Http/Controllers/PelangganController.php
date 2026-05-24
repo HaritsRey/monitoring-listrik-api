@@ -13,89 +13,172 @@ class PelangganController extends Controller
      *     path="/api/pelanggan",
      *     tags={"Pelanggan"},
      *     summary="Ambil semua data pelanggan",
+     *     security={{"bearerAuth":{}}},
      *     @OA\Response(
      *         response=200,
-     *         description="Berhasil"
+     *         description="Berhasil mengambil data pelanggan"
      *     )
      * )
      */
     public function index()
     {
-        return response()->json(Pelanggan::all());
-    }
-
-/**
- * @OA\Post(
- *     path="/api/pelanggan",
- *     tags={"Pelanggan"},
- *     summary="Tambah pelanggan",
- *     @OA\RequestBody(
- *         required=true,
- *         @OA\JsonContent(
- *             required={"nama","alamat","no_meter","no_hp"},
- *             @OA\Property(property="nama", type="string", example="Raihan"),
- *             @OA\Property(property="alamat", type="string", example="Pekanbaru"),
- *             @OA\Property(property="no_meter", type="string", example="123456789"),
- *             @OA\Property(property="no_hp", type="string", example="08123456789")
- *         )
- *     ),
- *     @OA\Response(
- *         response=201,
- *         description="Berhasil ditambahkan"
- *     )
- * )
- */
-public function store(Request $request)
-{
-    try {
-
-        $pelanggan = new Pelanggan();
-
-        $pelanggan->nama = $request->nama;
-        $pelanggan->alamat = $request->alamat;
-        $pelanggan->no_meter = $request->no_meter;
-        $pelanggan->no_hp = $request->no_hp;
-
-        $pelanggan->save();
+        $pelanggan = Pelanggan::all();
 
         return response()->json([
-            'message' => 'Data berhasil ditambahkan',
+            'success' => true,
+            'message' => 'Data pelanggan berhasil diambil',
+            'total' => $pelanggan->count(),
+            'data' => $pelanggan
+        ], 200);
+    }
+
+    /**
+     * @OA\Post(
+     *     path="/api/pelanggan",
+     *     tags={"Pelanggan"},
+     *     summary="Tambah pelanggan",
+     *     security={{"bearerAuth":{}}},
+     *
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"nama","alamat","no_meter","no_hp"},
+     *
+     *             @OA\Property(
+     *                 property="nama",
+     *                 type="string",
+     *                 example="Raihan"
+     *             ),
+     *
+     *             @OA\Property(
+     *                 property="alamat",
+     *                 type="string",
+     *                 example="Pekanbaru"
+     *             ),
+     *
+     *             @OA\Property(
+     *                 property="no_meter",
+     *                 type="string",
+     *                 example="123456789"
+     *             ),
+     *
+     *             @OA\Property(
+     *                 property="no_hp",
+     *                 type="string",
+     *                 example="08123456789"
+     *             )
+     *         )
+     *     ),
+     *
+     *     @OA\Response(
+     *         response=201,
+     *         description="Data berhasil ditambahkan"
+     *     )
+     * )
+     */
+    public function store(Request $request)
+    {
+        $validated = $request->validate([
+            'nama' => 'required|string|max:255',
+            'alamat' => 'required|string',
+            'no_meter' => 'required|string|unique:pelanggans,no_meter',
+            'no_hp' => 'required|string|max:15'
+        ]);
+
+        $pelanggan = Pelanggan::create($validated);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Data pelanggan berhasil ditambahkan',
             'data' => $pelanggan
         ], 201);
+    }
 
-    } catch (\Exception $e) {
+    /**
+     * @OA\Get(
+     *     path="/api/pelanggan/{id}",
+     *     tags={"Pelanggan"},
+     *     summary="Detail pelanggan",
+     *     security={{"bearerAuth":{}}},
+     *
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(type="integer")
+     *     ),
+     *
+     *     @OA\Response(
+     *         response=200,
+     *         description="Berhasil mengambil detail pelanggan"
+     *     ),
+     *
+     *     @OA\Response(
+     *         response=404,
+     *         description="Data tidak ditemukan"
+     *     )
+     * )
+     */
+    public function show($id)
+    {
+        $pelanggan = Pelanggan::find($id);
+
+        if (!$pelanggan) {
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Data pelanggan tidak ditemukan'
+            ], 404);
+
+        }
 
         return response()->json([
-            'error' => $e->getMessage()
-        ], 500);
-
+            'success' => true,
+            'message' => 'Detail pelanggan berhasil diambil',
+            'data' => $pelanggan
+        ], 200);
     }
-}
 
     /**
      * @OA\Put(
      *     path="/api/pelanggan/{id}",
      *     tags={"Pelanggan"},
      *     summary="Update pelanggan",
+     *     security={{"bearerAuth":{}}},
+     *
      *     @OA\Response(
      *         response=200,
-     *         description="Berhasil diupdate"
+     *         description="Berhasil update data pelanggan"
      *     )
      * )
      */
-public function show($id)
-    {
-         $pelanggan = Pelanggan::findOrFail($id);
-
-        return response()->json($pelanggan);
-    }
     public function update(Request $request, $id)
     {
-        $pelanggan = Pelanggan::findOrFail($id);
+        $pelanggan = Pelanggan::find($id);
 
-        $pelanggan->update($request->all());
+        if (!$pelanggan) {
 
-        return response()->json($pelanggan);
+            return response()->json([
+                'success' => false,
+                'message' => 'Data pelanggan tidak ditemukan'
+            ], 404);
+
+        }
+
+        $validated = $request->validate([
+            'nama' => 'required|string|max:255',
+            'alamat' => 'required|string',
+            'no_meter' => 'required|string|unique:pelanggans,no_meter,' . $id,
+            'no_hp' => 'required|string|max:15'
+        ]);
+
+        $pelanggan->update($validated);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Data pelanggan berhasil diupdate',
+            'data' => $pelanggan
+        ], 200);
     }
 
     /**
@@ -103,18 +186,32 @@ public function show($id)
      *     path="/api/pelanggan/{id}",
      *     tags={"Pelanggan"},
      *     summary="Hapus pelanggan",
+     *     security={{"bearerAuth":{}}},
+     *
      *     @OA\Response(
      *         response=200,
-     *         description="Berhasil dihapus"
+     *         description="Berhasil menghapus pelanggan"
      *     )
      * )
      */
     public function destroy($id)
     {
-        Pelanggan::destroy($id);
+        $pelanggan = Pelanggan::find($id);
+
+        if (!$pelanggan) {
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Data pelanggan tidak ditemukan'
+            ], 404);
+
+        }
+
+        $pelanggan->delete();
 
         return response()->json([
-            'message' => 'Data berhasil dihapus'
-        ]);
+            'success' => true,
+            'message' => 'Data pelanggan berhasil dihapus'
+        ], 200);
     }
 }

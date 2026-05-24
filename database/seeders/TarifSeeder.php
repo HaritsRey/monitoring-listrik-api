@@ -5,98 +5,78 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
-class MeterListrikSeeder extends Seeder
+class TarifSeeder extends Seeder
 {
     public function run(): void
     {
-        DB::table('meter_listrik')->insert([
+        DB::table('tarifs')->insert([
 
             [
-                'pelanggan_id' => 1,
-                'tarif_id' => 1,
-                'nomor_meter' => 'ML001',
                 'daya' => '450 VA',
+                'tarif_per_kwh' => 415,
                 'created_at' => now(),
                 'updated_at' => now()
             ],
 
             [
-                'pelanggan_id' => 2,
-                'tarif_id' => 2,
-                'nomor_meter' => 'ML002',
                 'daya' => '900 VA',
+                'tarif_per_kwh' => 605,
                 'created_at' => now(),
                 'updated_at' => now()
             ],
 
             [
-                'pelanggan_id' => 3,
-                'tarif_id' => 3,
-                'nomor_meter' => 'ML003',
                 'daya' => '1300 VA',
+                'tarif_per_kwh' => 1444,
                 'created_at' => now(),
                 'updated_at' => now()
             ],
 
             [
-                'pelanggan_id' => 4,
-                'tarif_id' => 4,
-                'nomor_meter' => 'ML004',
                 'daya' => '2200 VA',
+                'tarif_per_kwh' => 1444,
                 'created_at' => now(),
                 'updated_at' => now()
             ],
 
             [
-                'pelanggan_id' => 5,
-                'tarif_id' => 5,
-                'nomor_meter' => 'ML005',
                 'daya' => '3500 VA',
+                'tarif_per_kwh' => 1699,
                 'created_at' => now(),
                 'updated_at' => now()
             ],
 
             [
-                'pelanggan_id' => 6,
-                'tarif_id' => 6,
-                'nomor_meter' => 'ML006',
                 'daya' => '4400 VA',
+                'tarif_per_kwh' => 1699,
                 'created_at' => now(),
                 'updated_at' => now()
             ],
 
             [
-                'pelanggan_id' => 7,
-                'tarif_id' => 7,
-                'nomor_meter' => 'ML007',
                 'daya' => '5500 VA',
+                'tarif_per_kwh' => 1699,
                 'created_at' => now(),
                 'updated_at' => now()
             ],
 
             [
-                'pelanggan_id' => 8,
-                'tarif_id' => 8,
-                'nomor_meter' => 'ML008',
                 'daya' => '6600 VA',
+                'tarif_per_kwh' => 1699,
                 'created_at' => now(),
                 'updated_at' => now()
             ],
 
             [
-                'pelanggan_id' => 9,
-                'tarif_id' => 9,
-                'nomor_meter' => 'ML009',
                 'daya' => '7700 VA',
+                'tarif_per_kwh' => 1699,
                 'created_at' => now(),
                 'updated_at' => now()
             ],
 
             [
-                'pelanggan_id' => 10,
-                'tarif_id' => 10,
-                'nomor_meter' => 'ML010',
                 'daya' => '10600 VA',
+                'tarif_per_kwh' => 1699,
                 'created_at' => now(),
                 'updated_at' => now()
             ]
